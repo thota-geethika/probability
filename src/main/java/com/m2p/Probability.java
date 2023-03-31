@@ -28,4 +28,9 @@ public class Probability {
     {
         return new Probability(probabilityValue * event.probabilityValue);
     }
+
+    public Probability not()
+    {
+        return new Probability(1-probabilityValue);
+    }
 }

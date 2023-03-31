@@ -40,5 +40,23 @@ public class ProbabilityTest {
         assertThat(eventsOccurringTogether,is(equalTo(probabilityOfHeadsInOneToss.and(probabilityOfHeadsInAnotherToss))));
     }
 
+    @Test
+    void toReturnOneWhenProbabilityOfAnEventNotOccurringIsCertain()
+    {
+        Probability probabilityThatEventDoNotHappenCertainly = new Probability(1);
 
+        Probability probabilityOfEventNotOccurring = new Probability(0);
+
+        assertThat(probabilityOfEventNotOccurring,is(equalTo(probabilityThatEventDoNotHappenCertainly.not())));
+    }
+
+    @Test
+    void toReturnZeroPointSixWhenTheProbabilityOfAnEventOccurringIsZeroPointFour()
+    {
+        Probability probabilityOfAnEventOccurring = new Probability(0.4);
+
+        Probability probabilityOfAnEventNotOccurring = new Probability(0.6);
+
+        assertThat(probabilityOfAnEventNotOccurring,is(equalTo(probabilityOfAnEventOccurring.not())));
+    }
 }
