@@ -33,4 +33,9 @@ public class Probability {
     {
         return new Probability(1-this.probabilityValue);
     }
+
+    public Probability or(Probability anotherEvent) {
+
+        return (this.not()).and(anotherEvent.not()).not();
+    }
 }

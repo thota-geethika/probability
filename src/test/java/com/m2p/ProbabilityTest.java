@@ -13,6 +13,7 @@ public class ProbabilityTest {
     private static final Probability certainEventProbability = new Probability(1);
     private static final Probability impossibleEventProbability = new Probability(0);
     private static final Probability headsProbabilityInACoinToss = new Probability(0.5);
+    private static final Probability tailsProbabilityInACoinToss = new Probability(0.5);
 
 
     @Nested
@@ -20,7 +21,6 @@ public class ProbabilityTest {
         @Test
         void toReturnEqualityWhenProbabilityOfHeadsIsComparedToProbabilityOfTailsInACoinToss()
         {
-            Probability tailsProbabilityInACoinToss = new Probability(0.5);
 
             assertThat(headsProbabilityInACoinToss, is(equalTo(tailsProbabilityInACoinToss)));
         }
@@ -83,6 +83,24 @@ public class ProbabilityTest {
             Probability probabilityOfAnEventNotOccurring = new Probability(0.6);
 
             assertThat(probabilityOfAnEventNotOccurring, is(equalTo(probabilityOfAnEventOccurring.not())));
+        }
+    }
+
+    @Nested
+    class Or
+    {
+
+        @Test
+        void toGetACertainEventWhenACertainEventOrAnImpossibleEventIsHappening()
+        {
+            assertThat(certainEventProbability.or(impossibleEventProbability),is(equalTo(certainEventProbability)));
+        }
+        @Test
+        void toReturnZeroPointSevenFiyveWhenEitherHeadsOrTailsInACoinTossIsHappening()
+        {
+            Probability probabilityOfEitherHeadsOrTailsInACoinToss = new Probability(0.75);
+
+            assertThat(headsProbabilityInACoinToss.or(tailsProbabilityInACoinToss),is(equalTo(probabilityOfEitherHeadsOrTailsInACoinToss)));
         }
     }
 }
