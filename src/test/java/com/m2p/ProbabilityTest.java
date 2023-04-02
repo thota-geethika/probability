@@ -1,62 +1,88 @@
 package com.m2p;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 
 public class ProbabilityTest {
 
-    @Test
-    void toReturnEqualityWhenProbabilityOfHeadsIsComparedToProbabilityOfTailsInACoinToss()
-    {
-        Probability HeadsProbabilityInACoinToss = new Probability(0.5);
-        Probability TailsProbabilityInACoinToss = new Probability(0.5);
+    private static final Probability certainEventProbability = new Probability(1);
+    private static final Probability impossibleEventProbability = new Probability(0);
+    private static final Probability headsProbabilityInACoinToss = new Probability(0.5);
 
-        assertThat(HeadsProbabilityInACoinToss,is(equalTo(TailsProbabilityInACoinToss)));
+
+    @Nested
+    class ProbabilityEquality {
+        @Test
+        void toReturnEqualityWhenProbabilityOfHeadsIsComparedToProbabilityOfTailsInACoinToss()
+        {
+            Probability tailsProbabilityInACoinToss = new Probability(0.5);
+
+            assertThat(headsProbabilityInACoinToss, is(equalTo(tailsProbabilityInACoinToss)));
+        }
+
+        @Test
+        void toCheckInEqualityWhenProbabilityOfHeadsInACoinTossIsComparedWithNullValue()
+        {
+            assertThat(headsProbabilityInACoinToss,is(not(equalTo(null))));
+        }
+
+        @Test
+        void toCheckInEqualityWhenProbabilityOfHeadsInACoinTossIsComparedWithGettingOneInADiceRoll()
+        {
+            Probability probabilityOfGettingOneInADiceRoll = new Probability(0.16);
+
+            assertThat(headsProbabilityInACoinToss,is(not(equalTo(probabilityOfGettingOneInADiceRoll))));
+        }
+
+        @Test
+        void toCheckInEqualityWhenProbabilityOfHeadsInACoinTossIsComparedWithAPrimitiveValue()
+        {
+            double probabilityOfTailInACoinToss = 0.5;
+
+            assertThat(headsProbabilityInACoinToss,is(not(equalTo(probabilityOfTailInACoinToss))));
+        }
+    }
+    @Nested
+    class And {
+        @Test
+        void toGetACertainEventWhenTwoCertainEventsAreHappeningTogether() {
+            Probability anotherCertainEventProbability = new Probability(1);
+
+            assertThat(certainEventProbability, is(equalTo(certainEventProbability.and(anotherCertainEventProbability))));
+        }
+
+        // The probability of getting head in one toss is independent of getting toss in another toss
+        @Test
+        void toReturnZeroPointTwoFiveWhenHeadsOccurInOneTossAndHeadsOccurInAnotherToss() {
+            Probability probabilityOfHeadsInOneToss = new Probability(0.5);
+            Probability probabilityOfHeadsInAnotherToss = new Probability(0.5);
+
+            Probability eventsOccurringTogether = new Probability(0.25);
+
+            assertThat(eventsOccurringTogether, is(equalTo(probabilityOfHeadsInOneToss.and(probabilityOfHeadsInAnotherToss))));
+        }
     }
 
-    @Test
-    void toReturnProbabilityAsOneWhenOccurringOfTwoEventsIsCertain()
-    {
-        Probability probabilityOfOneEventToHappenCertainly = new Probability(1);
-        Probability probabilityOfAnotherEventToHappenCertainly = new Probability(1);
+    @Nested
+    class Not {
+        @Test
+        void toGetAnImpossibleEventProbabilityWhenACertainEventIsNotHappening()
+        {
+            assertThat(certainEventProbability.not(), is(equalTo(impossibleEventProbability)));
+        }
 
-        Probability twoCertainEventsOccurringTogether = new Probability(1);
+        @Test
+        void toReturnZeroPointSixWhenTheProbabilityOfAnEventOccurringIsZeroPointFour() {
+            Probability probabilityOfAnEventOccurring = new Probability(0.4);
 
-        assertThat(twoCertainEventsOccurringTogether,is(equalTo(probabilityOfOneEventToHappenCertainly.and(probabilityOfAnotherEventToHappenCertainly))));
-    }
+            Probability probabilityOfAnEventNotOccurring = new Probability(0.6);
 
-    // The probability of getting head in one toss is independent of getting toss in another toss
-    @Test
-    void toReturnZeroPointTwoFiveWhenHeadsOccurInOneTossAndHeadsOccurInAnotherToss()
-    {
-        Probability probabilityOfHeadsInOneToss = new Probability(0.5);
-        Probability probabilityOfHeadsInAnotherToss = new Probability(0.5);
-
-        Probability eventsOccurringTogether = new Probability(0.25);
-
-        assertThat(eventsOccurringTogether,is(equalTo(probabilityOfHeadsInOneToss.and(probabilityOfHeadsInAnotherToss))));
-    }
-
-    @Test
-    void toReturnOneWhenProbabilityOfAnEventNotOccurringIsCertain()
-    {
-        Probability probabilityThatEventDoNotHappenCertainly = new Probability(1);
-
-        Probability probabilityOfEventNotOccurring = new Probability(0);
-
-        assertThat(probabilityOfEventNotOccurring,is(equalTo(probabilityThatEventDoNotHappenCertainly.not())));
-    }
-
-    @Test
-    void toReturnZeroPointSixWhenTheProbabilityOfAnEventOccurringIsZeroPointFour()
-    {
-        Probability probabilityOfAnEventOccurring = new Probability(0.4);
-
-        Probability probabilityOfAnEventNotOccurring = new Probability(0.6);
-
-        assertThat(probabilityOfAnEventNotOccurring,is(equalTo(probabilityOfAnEventOccurring.not())));
+            assertThat(probabilityOfAnEventNotOccurring, is(equalTo(probabilityOfAnEventOccurring.not())));
+        }
     }
 }

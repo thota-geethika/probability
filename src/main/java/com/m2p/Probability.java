@@ -17,20 +17,20 @@ public class Probability {
         {
             return true;
         }
-        if(getClass() != probabilityObject.getClass())
+        if(probabilityObject == null || getClass() != probabilityObject.getClass())
         {
             return false;
         }
         return probabilityValue == ((Probability)probabilityObject).probabilityValue;
     }
 
-    public Probability and(Probability event)
+    public Probability and(Probability anotherEvent)
     {
-        return new Probability(probabilityValue * event.probabilityValue);
+        return new Probability(this.probabilityValue * anotherEvent.probabilityValue);
     }
 
     public Probability not()
     {
-        return new Probability(1-probabilityValue);
+        return new Probability(1-this.probabilityValue);
     }
 }
